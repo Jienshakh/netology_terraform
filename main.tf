@@ -2,13 +2,16 @@ terraform {
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
-      version = "~> 3.0.1"
+      version = "3.6.2"
     }
   }
   required_version = "~>1.12.0" /*Многострочный комментарий.
  Требуемая версия terraform */
 }
-provider "docker" {}
+provider "docker" {
+  context = "yandex-vm"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
 
 #однострочный комментарий
 
@@ -21,18 +24,25 @@ resource "random_password" "random_string" {
 }
 
 
-resource "docker_image" "nginx" {
-  name         = "nginx:latest"
-  keep_locally = true
+resource "docker_image" "mysql" {
+  name         = "mysql:8.0.1"
 }
 
-resource "docker_container" "nginx" {
-  image = docker_image.nginx.image_id
-  name  = "hello_world"
+resource "docker_container" "mysql" {
+  image = docker_image.mysql.image_id
+  name  = "mysql-netology"
 
   ports {
-    internal = 80
-    external = 9090
+    internal = 3306
+    external = 3306
   }
+
+  env = [
+    "MYSQL_ROOT_PASSWORD=${random_password.random_string.result}",
+    "MYSQL_DATABASE=wordpress",
+    "MYSQL_USER=wordpress",
+    "MYSQL_PASSWORD=${random_password.random_string.result}",
+    "MYSQL_ROOT_HOST=%"
+  ]
 }
 
