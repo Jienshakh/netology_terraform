@@ -1,56 +1,41 @@
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "3.6.2"
+resource "yandex_vpc_network" "develop" {
+  name = var.vpc_name
+}
+resource "yandex_vpc_subnet" "develop" {
+  name           = var.vpc_name
+  zone           = var.default_zone
+  network_id     = yandex_vpc_network.develop.id
+  v4_cidr_blocks = var.default_cidr
+}
+
+
+data "yandex_compute_image" "ubuntu" {
+  family = "ubuntu-2004-lts"
+}
+resource "yandex_compute_instance" "platform" {
+  name        = "netology-develop-platform-web"
+  platform_id = "standard-v3"
+  resources {
+    cores         = 2
+    memory        = 1
+    core_fraction = 20
+  }
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.image_id
     }
   }
-  required_version = "~>1.12.0" /*Многострочный комментарий.
- Требуемая версия terraform */
-}
-provider "docker" {
-  context = "yandex-vm"
-  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
-}
-
-#однострочный комментарий
-
-resource "random_password" "mysql_root_password" {
-  length      = 16
-  special     = false
-  min_upper   = 1
-  min_lower   = 1
-  min_numeric = 1
-}
-
-resource "random_password" "mysql_wordpress_password" {
-  length      = 16
-  special     = false
-  min_upper   = 1
-  min_lower   = 1
-  min_numeric = 1
-}
-
-
-resource "docker_image" "mysql" {
-  name         = "mysql:8.0.1"
-}
-
-resource "docker_container" "mysql" {
-  image = docker_image.mysql.image_id
-  name  = "mysql-netology"
-
-  ports {
-    internal = 3306
-    external = 3306
+  scheduling_policy {
+    preemptible = true
+  }
+  network_interface {
+    subnet_id = yandex_vpc_subnet.develop.id
+    nat       = true
   }
 
-  env = [
-    "MYSQL_ROOT_PASSWORD=${random_password.mysql_root_password.result}",
-    "MYSQL_DATABASE=wordpress",
-    "MYSQL_USER=wordpress",
-    "MYSQL_PASSWORD=${random_password.mysql_wordpress_password.result}",
-    "MYSQL_ROOT_HOST=%"
-  ]
-}
+  metadata = {
+    serial-port-enable = 1
+    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
+  }
 
+}
