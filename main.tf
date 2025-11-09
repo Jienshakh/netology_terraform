@@ -15,7 +15,15 @@ provider "docker" {
 
 #однострочный комментарий
 
-resource "random_password" "random_string" {
+resource "random_password" "mysql_root_password" {
+  length      = 16
+  special     = false
+  min_upper   = 1
+  min_lower   = 1
+  min_numeric = 1
+}
+
+resource "random_password" "mysql_wordpress_password" {
   length      = 16
   special     = false
   min_upper   = 1
@@ -38,10 +46,10 @@ resource "docker_container" "mysql" {
   }
 
   env = [
-    "MYSQL_ROOT_PASSWORD=${random_password.random_string.result}",
+    "MYSQL_ROOT_PASSWORD=${random_password.mysql_root_password.result}",
     "MYSQL_DATABASE=wordpress",
     "MYSQL_USER=wordpress",
-    "MYSQL_PASSWORD=${random_password.random_string.result}",
+    "MYSQL_PASSWORD=${random_password.mysql_wordpress_password.result}",
     "MYSQL_ROOT_HOST=%"
   ]
 }
