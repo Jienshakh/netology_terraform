@@ -47,9 +47,10 @@ variable "subnet_db_name" {
 
 
 ###ssh vars
-
+/*
 variable "vms_ssh_root_key" {
   type        = string
   default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAJL3zKyzYWOD80ZP0VGTZ77fItgdDyzXLlFITM+wMXHRMtJTnQG1ETExeLV9T76yvzlFSPGXPG6cje4BrCrzA5Nx7hM6rATXGYXczaxyKjkF7CHJf1n1c1JZiBSg97DogAqJ9rdrneens7VUtqGIdm6KULt1+f9oPLhgR8cA1+zBIMgaKqsUjss2/pvTQt34jmgW0rcQL81/4v5UQn8P4EM1swp7+TR5Yg+fUOh4UXnCWeta1+ZOQq6Nv1LcigFJBIFtpZEJThEEdZuoAfEPJrqrqR3NR59FpzbkTjMiDJXCzbR6ojJ4ViVjiR51Ert6688FnVpVHvHgzSnSJode5"
   description = "ssh-keygen -t ed25519"
 }
+*/
