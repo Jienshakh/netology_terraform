@@ -45,6 +45,15 @@ variable "subnet_db_name" {
   description = "DB subnet name"
 }
 
+variable "nat_gateway_name" {
+  type    = string
+  default = "nat-gateway"
+}
+
+variable "rt_name" {
+  type    = string 
+  default = "main-route-table"
+}
 
 ###ssh vars
 /*
