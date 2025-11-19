@@ -69,14 +69,40 @@ variable "each_vm" {
 ### WEB vars
 
 variable "web_resources" {
-  type            = map(any)
+  type              = map(any)
   default = {
     zone            = "ru-central1-a"
     cpu             = 2
     ram             = 1
-    cores_fraction   = 20
-    platform        = true
+    cores_fraction  = 20
+    platform        = "standard-v3"
     preemptible     = true
     serial_port     = true
   }
 }
+
+
+### storage vars
+
+variable "disk_params" {
+  type              = map(any)
+  default = {
+    zone            = "ru-central1-a"
+    type            = "network-hdd"
+    size            = 1
+  }
+}
+
+variable "storage_resources" {
+  type              = map(any)
+  default = {
+    zone            = "ru-central1-a"
+    cpu             = 2
+    ram             = 1
+    cores_fraction  = 20
+    platform        = "standard-v3"
+    preemptible     = true
+    serial_port     = true
+  }
+}
+
