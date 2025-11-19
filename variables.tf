@@ -1,6 +1,5 @@
 ###cloud vars
 
-
 variable "cloud_id" {
   type        = string
   description = "https://cloud.yandex.ru/docs/resource-manager/operations/cloud/get-id"
@@ -25,68 +24,59 @@ variable "default_cidr" {
 variable "vpc_name" {
   type        = string
   default     = "develop"
-  description = "VPC network & subnet name"
+  description = "VPC network&subnet name"
 }
 
-variable "db_zone" {
-  type        = string
-  default     = "ru-central1-b"
-  description = "https://cloud.yandex.ru/docs/overview/concepts/geo-scope"
-}
-variable "db_cidr" {
-  type        = list(string)
-  default     = ["10.0.2.0/24"]
-  description = "https://cloud.yandex.ru/docs/vpc/operations/subnet-create"
-}
 
-variable "subnet_db_name" {
-  type        = string
-  default     = "develop-db"
-  description = "DB subnet name"
-}
+### DB vars
 
-variable "nat_gateway_name" {
-  type    = string
-  default = "nat-gateway"
-}
-
-variable "rt_name" {
-  type    = string 
-  default = "main-route-table"
-}
-
-###ssh vars
-/*
-variable "vms_ssh_root_key" {
-  type        = string
-  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAJL3zKyzYWOD80ZP0VGTZ77fItgdDyzXLlFITM+wMXHRMtJTnQG1ETExeLV9T76yvzlFSPGXPG6cje4BrCrzA5Nx7hM6rATXGYXczaxyKjkF7CHJf1n1c1JZiBSg97DogAqJ9rdrneens7VUtqGIdm6KULt1+f9oPLhgR8cA1+zBIMgaKqsUjss2/pvTQt34jmgW0rcQL81/4v5UQn8P4EM1swp7+TR5Yg+fUOh4UXnCWeta1+ZOQq6Nv1LcigFJBIFtpZEJThEEdZuoAfEPJrqrqR3NR59FpzbkTjMiDJXCzbR6ojJ4ViVjiR51Ert6688FnVpVHvHgzSnSJode5"
-  description = "ssh-keygen -t ed25519"
-}
-*/
-
-
-### test var
-
-variable "test" {
-  type = list(map(list(string)))
+variable "each_vm" {
+  type = list(object({  
+    vm_name         = string
+    cpu             = number
+    ram             = number
+    disk_volume     = number 
+    cores_fraction  = number
+    platform        = string
+    preemptible     = bool
+    serial_port     = bool
+  }))
+  
   default = [
     {
-      dev1 = [
-        "ssh -o 'StrictHostKeyChecking=no' ubuntu@62.84.124.117",
-        "10.0.1.7"
-      ]
-    },
-    {    
-      dev2 = [
-        "ssh -o 'StrictHostKeyChecking=no' ubuntu@84.252.140.88",
-        "10.0.2.29"
-      ]
+      vm_name         = "main" 
+      cpu             = 2
+      ram             = 1
+      disk_volume     = 10
+      cores_fraction  = 20 
+      platform        = "standard-v3"
+      preemptible     = true
+      serial_port     = true
     },
     {
-      prod1 = [
-        "ssh -o 'StrictHostKeyChecking=no' ubuntu@51.250.2.101",
-        "10.0.1.30"
-      ]
+      vm_name         = "replica"
+      cpu             = 2
+      ram             = 1
+      disk_volume     = 11
+      cores_fraction  = 20
+      platform        = "standard-v3"
+      preemptible     = true
+      serial_port     = true
     }
   ]
+}
+
+### WEB vars
+
+variable "web_resources" {
+  type            = map(any)
+  default = {
+    zone            = "ru-central1-a"
+    cpu             = 2
+    ram             = 1
+    cores_fraction   = 20
+    platform        = true
+    preemptible     = true
+    serial_port     = true
+  }
 }

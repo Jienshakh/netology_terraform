@@ -1,4 +1,3 @@
 locals {
-vm_web_name = "${ var.vm_web_platform_name }-${var.vm_web_platform_id}"
-vm_db_name  = "${ var.vm_db_platform_name }-${var.vm_db_platform_id}"
+  ssh_key = file("~/.ssh/id_ed25519.pub")
 }
