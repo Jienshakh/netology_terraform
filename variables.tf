@@ -1,5 +1,4 @@
 ###cloud vars
-
 variable "cloud_id" {
   type        = string
   description = "https://cloud.yandex.ru/docs/resource-manager/operations/cloud/get-id"
@@ -27,82 +26,39 @@ variable "vpc_name" {
   description = "VPC network&subnet name"
 }
 
+###common vars
 
-### DB vars
+variable "username" {
+  type = string
+}
 
-variable "each_vm" {
-  type = list(object({  
-    vm_name         = string
-    cpu             = number
-    ram             = number
-    disk_volume     = number 
-    cores_fraction  = number
-    platform        = string
-    preemptible     = bool
-    serial_port     = bool
-  }))
-  
+variable "ssh_public_key" {
+  type        = string
+  description = "Location of SSH public key."
+}
+
+variable packages {
+  type    = list
   default = [
-    {
-      vm_name         = "main" 
-      cpu             = 2
-      ram             = 1
-      disk_volume     = 10
-      cores_fraction  = 20 
-      platform        = "standard-v3"
-      preemptible     = true
-      serial_port     = true
-    },
-    {
-      vm_name         = "replica"
-      cpu             = 2
-      ram             = 1
-      disk_volume     = 11
-      cores_fraction  = 20
-      platform        = "standard-v3"
-      preemptible     = true
-      serial_port     = true
-    }
+    "vim",
+    "nginx"
   ]
 }
 
-### WEB vars
 
-variable "web_resources" {
-  type              = map(any)
-  default = {
-    zone            = "ru-central1-a"
-    cpu             = 2
-    ram             = 1
-    cores_fraction  = 20
-    platform        = "standard-v3"
-    preemptible     = true
-    serial_port     = true
-  }
+###example vm_web var
+variable "vm_web_name" {
+  type        = string
+  default     = "netology-develop-platform-web"
+  description = "example vm_web_ prefix"
+}
+
+###example vm_db var
+variable "vm_db_name" {
+  type        = string
+  default     = "netology-develop-platform-db"
+  description = "example vm_db_ prefix"
 }
 
 
-### storage vars
-
-variable "disk_params" {
-  type              = map(any)
-  default = {
-    zone            = "ru-central1-a"
-    type            = "network-hdd"
-    size            = 1
-  }
-}
-
-variable "storage_resources" {
-  type              = map(any)
-  default = {
-    zone            = "ru-central1-a"
-    cpu             = 2
-    ram             = 1
-    cores_fraction  = 20
-    platform        = "standard-v3"
-    preemptible     = true
-    serial_port     = true
-  }
-}
 
